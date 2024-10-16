@@ -1,40 +1,65 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Lobby } from './lobby.entity';
-import { User } from '../users/user.entity';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+import { Lobby } from './lobby.interface';
 
 @Injectable()
 export class LobbyService {
-  constructor(
-    @InjectRepository(Lobby)
-    private lobbyRepository: Repository<Lobby>,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  createLobby(name: string, creator: User): Promise<Lobby> {
-    const lobby = this.lobbyRepository.create({
-      name,
-      creator,
-      participants: [creator.id],
+  // prisma create lobby
+  async createLobby(name: string, creatorId: string): Promise<Lobby> {
+    return this.prisma.lobby.create({
+      data: {
+        name,
+        creatorId,
+        participants: [creatorId],
+      },
     });
-
-    return this.lobbyRepository.save(lobby);
   }
 
-  findAll(): Promise<Lobby[]> {
-    return this.lobbyRepository.find({ relations: ['creator'] });
+  findAll() {
+    return this.prisma.lobby.findMany({
+      select: {
+        id: true,
+        name: true,
+        creator: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+    });
   }
 
-  findOne(id: string): Promise<Lobby | undefined> {
-    return this.lobbyRepository.findOne(id);
+  findOne(id: string) {
+    return this.prisma.lobby.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        name: true,
+        creator: true,
+        participants: true,
+      },
+    });
   }
 
-  async joinLobby(lobbyId: string, userId: string): Promise<Lobby> {
-    const lobby = await this.lobbyRepository.findOne(lobbyId);
+  async joinLobby(lobbyId: string, userId: string) {
+    const lobby = await this.findOne(lobbyId);
 
-    if (!lobby.participants.includes(userId)) {
+    if (lobby.participants.length < 4 && !lobby.participants.includes(userId)) {
       lobby.participants.push(userId);
-      await this.lobbyRepository.save(lobby);
+
+      return this.prisma.lobby.update({
+        where: {
+          id: lobbyId,
+        },
+        data: {
+          participants: lobby.participants,
+        },
+      });
     }
 
     return lobby;
