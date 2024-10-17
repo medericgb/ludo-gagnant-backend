@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { Lobby } from './lobby.interface';
@@ -7,7 +7,6 @@ import { Lobby } from './lobby.interface';
 export class LobbyService {
   constructor(private prisma: PrismaService) {}
 
-  // prisma create lobby
   async createLobby(name: string, creatorId: string): Promise<Lobby> {
     return this.prisma.lobby.create({
       data: {
@@ -18,32 +17,42 @@ export class LobbyService {
     });
   }
 
-  findAll() {
-    return this.prisma.lobby.findMany({
+  async findAll() {
+    return await this.prisma.lobby.findMany({
       select: {
         id: true,
         name: true,
         creator: {
           select: {
-            id: true,
             username: true,
           },
         },
+        participants: true,
       },
     });
   }
 
-  findOne(id: string) {
-    return this.prisma.lobby.findUnique({
+  async findOne(id: string) {
+    const lobby = await this.prisma.lobby.findUnique({
       where: {
         id,
       },
       select: {
         name: true,
-        creator: true,
+        creator: {
+          select: {
+            username: true,
+          },
+        },
         participants: true,
       },
     });
+
+    if (!lobby) {
+      throw new HttpException('Lobby not found', 404);
+    }
+
+    return lobby;
   }
 
   async joinLobby(lobbyId: string, userId: string) {
@@ -55,6 +64,15 @@ export class LobbyService {
       return this.prisma.lobby.update({
         where: {
           id: lobbyId,
+        },
+        select: {
+          name: true,
+          creator: {
+            select: {
+              username: true,
+            },
+          },
+          participants: true,
         },
         data: {
           participants: lobby.participants,

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, Req, UseGuards } from '@nestjs/common';
+import { Body, Param, Controller, Post, Get, Req, UseGuards } from '@nestjs/common';
 import { LobbyService } from './lobby.service';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 
@@ -8,14 +8,14 @@ export class LobbyController {
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
-  create(@Body() body, @Req() req) {
-    return this.lobbyService.createLobby(body.name, req.user);
+  createLobby(@Body() body, @Req() req) {
+    return this.lobbyService.createLobby(body.name, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post(':id/join')
-  join(@Body() body, @Req() req) {
-    return this.lobbyService.joinLobby(body.lobbyId, req.user.id);
+  joinLobby(@Param('id') id: string, @Req() req) {
+    return this.lobbyService.joinLobby(id, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -11,6 +11,14 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { username } });
   }
 
+  findOneByEmail(email: string): Promise<User | undefined> {
+    return this.prisma.user.findUnique({ where: { email } });
+  }
+
+  findOneByPhoneNumber(phoneNumber: string): Promise<User | undefined> {
+    return this.prisma.user.findUnique({ where: { phoneNumber } });
+  }
+
   findById(id: string): Promise<User | undefined> {
     return this.prisma.user.findUnique({ where: { id } });
   }
