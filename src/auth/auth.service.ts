@@ -18,7 +18,7 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.usersService.findOneByUsername(username);
+    const user = await this.usersService.findByUsername(username);
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const { password, ...result } = user;
@@ -37,12 +37,16 @@ export class AuthService {
   }
 
   async register(input: RegisterInput) {
-    const exist = await this.usersService.findOneByUsername(input.username) ||
-      await this.usersService.findOneByEmail(input.email) ||
-      await this.usersService.findOneByPhoneNumber(input.phoneNumber);
+    const exist =
+      (await this.usersService.findByUsername(input.username)) ||
+      (await this.usersService.findByEmail(input.email)) ||
+      (await this.usersService.findByPhoneNumber(input.phoneNumber));
 
     if (exist) {
-      throw new HttpException('Username, email or phone number already exists', 400);
+      throw new HttpException(
+        'Username, email or phone number already exists',
+        400,
+      );
     }
 
     const hashedPassword = await bcrypt.hash(input.password, 10);

@@ -8,13 +8,17 @@ export class LobbyService {
   constructor(private prisma: PrismaService) {}
 
   async createLobby(name: string, creatorId: string): Promise<Lobby> {
-    return this.prisma.lobby.create({
-      data: {
-        name,
-        creatorId,
-        participants: [creatorId],
-      },
-    });
+    try {
+      return await this.prisma.lobby.create({
+        data: {
+          name,
+          creatorId,
+          participants: [creatorId],
+        },
+      });
+    } catch (error) {
+      throw new HttpException('Failed to create lobby', 500);
+    }
   }
 
   async findAll() {

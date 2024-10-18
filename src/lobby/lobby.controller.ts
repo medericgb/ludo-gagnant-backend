@@ -23,4 +23,10 @@ export class LobbyController {
   findAll() {
     return this.lobbyService.findAll();
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.lobbyService.findOne(id);
+  }
 }
