@@ -1,56 +1,43 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
-import { User } from './user.interface';
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findByUsername(username: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({ where: { username } });
-    if (!user)
-      throw new NotFoundException(`User with username ${username} not found`);
+  private async findUniqueUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+    const user = await this.prisma.user.findUnique({ where });
+    if (!user) {
+      const field = Object.keys(where)[0];
+      throw new NotFoundException(`User with ${field} ${where[field]} not found`);
+    }
     return user;
+  }
+
+  async findByUsername(username: string): Promise<User> {
+    return this.findUniqueUser({ username });
   }
 
   async findByEmail(email: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({ where: { email } });
-    if (!user)
-      throw new NotFoundException(`User with email ${email} not found`);
-    return user;
+    return this.findUniqueUser({ email });
   }
 
   async findByPhoneNumber(phoneNumber: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({ where: { phoneNumber } });
-    if (!user)
-      throw new NotFoundException(
-        `User with phone number ${phoneNumber} not found`,
-      );
-    return user;
+    return this.findUniqueUser({ phoneNumber });
   }
 
   async findById(id: string): Promise<User> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
-    if (!user) throw new NotFoundException(`User with id ${id} not found`);
-    return user;
+    return this.findUniqueUser({ id });
   }
 
   async create(data: Prisma.UserCreateInput): Promise<User> {
-    try {
-      return await this.prisma.user.create({ data });
-    } catch (error) {
-      // Handle specific errors if needed
-      throw error;
-    }
+    return this.prisma.user.create({ data });
   }
 
   async update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
     try {
-      return await this.prisma.user.update({
-        where: { id },
-        data,
-      });
+      return await this.prisma.user.update({ where: { id }, data });
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(`User with id ${id} not found`);
@@ -61,14 +48,25 @@ export class UsersService {
 
   async delete(id: string): Promise<User> {
     try {
-      return await this.prisma.user.delete({
-        where: { id },
-      });
+      return await this.prisma.user.delete({ where: { id } });
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(`User with id ${id} not found`);
       }
       throw error;
     }
+  }
+
+  async checkUserExists(
+    username: string,
+    email: string,
+    phoneNumber: string
+  ): Promise<{ exists: boolean; field?: string }> {
+    const fields = ['username', 'email', 'phoneNumber'];
+    for (const field of fields) {
+      const user = await this.prisma.user.findUnique({ where: { [field]: eval(field) } });
+      if (user) return { exists: true, field };
+    }
+    return { exists: false };
   }
 }

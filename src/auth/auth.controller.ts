@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   ValidationPipe,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -15,27 +16,21 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  async register(@Body(new ValidationPipe()) input: RegisterUserDto) {
-    const user = await this.authService.register(input);
-    if (!user) {
-      throw new HttpException(
-        'Failed to register user',
-        HttpStatus.BAD_REQUEST,
-      );
+  async register(@Body(ValidationPipe) input: RegisterUserDto) {
+    try {
+      const user = await this.authService.register(input);
+      return { message: 'User registered successfully', userId: user.id };
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
-    return { message: 'User registered', userId: user.id };
   }
 
   @Post('login')
-  async login(@Body(new ValidationPipe()) input: LoginUserDto) {
+  async login(@Body(ValidationPipe) input: LoginUserDto) {
     const user = await this.authService.validateUser(input.username, input.password);
     if (!user) {
-      throw new HttpException(
-        'Failed to login user',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new UnauthorizedException('Invalid credentials');
     }
     return this.authService.login(user);
   }
-
 }

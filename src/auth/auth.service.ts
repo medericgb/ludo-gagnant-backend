@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -37,16 +37,14 @@ export class AuthService {
   }
 
   async register(input: RegisterInput) {
-    const exist =
-      (await this.usersService.findByUsername(input.username)) ||
-      (await this.usersService.findByEmail(input.email)) ||
-      (await this.usersService.findByPhoneNumber(input.phoneNumber));
+    const { exists, field } = await this.usersService.checkUserExists(
+      input.username,
+      input.email,
+      input.phoneNumber,
+    );
 
-    if (exist) {
-      throw new HttpException(
-        'Username, email or phone number already exists',
-        400,
-      );
+    if (exists) {
+      throw new BadRequestException(`User with this ${field} already exists`);
     }
 
     const hashedPassword = await bcrypt.hash(input.password, 10);
