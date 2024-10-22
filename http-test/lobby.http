@@ -1,17 +1,18 @@
 
 GET http://localhost:3000/lobby
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOiI1NzRkMzYwYS1mYzIxLTQ0YmYtOGQxMi1lZDY2YzY5OWFkZjQiLCJpYXQiOjE3Mjk1Mjc5ODcsImV4cCI6MTcyOTUzMTU4N30.HhadvtvVE9FzYAveiZVZmVStoORW_17jePYnXQmIpyM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOiJjNzEwM2JkYS1hZWZhLTQ1OTktODdhYi0wOTBjYzQyZjk1ZjAiLCJpYXQiOjE3Mjk1MzEwOTEsImV4cCI6MTcyOTUzNDY5MX0.hMV6I4xnBafouVqQV0uY6kVQwj7iQYmNPMJ6Ly9fcfo
 
 ###
 
 POST http://localhost:3000/lobby/create
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOiI1NzRkMzYwYS1mYzIxLTQ0YmYtOGQxMi1lZDY2YzY5OWFkZjQiLCJpYXQiOjE3Mjk1Mjc5ODcsImV4cCI6MTcyOTUzMTU4N30.HhadvtvVE9FzYAveiZVZmVStoORW_17jePYnXQmIpyM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOiJjNzEwM2JkYS1hZWZhLTQ1OTktODdhYi0wOTBjYzQyZjk1ZjAiLCJpYXQiOjE3Mjk1MzEwOTEsImV4cCI6MTcyOTUzNDY5MX0.hMV6I4xnBafouVqQV0uY6kVQwj7iQYmNPMJ6Ly9fcfo
 
 {
-  "name": "MyNewLobby",
-  "userId": "80f1d05f-9faf-4747-b97e-739badebd3f9"
+  "name": "Warrior of the North",
+  "userId": "c7103bda-aefa-4599-87ab-090cc42f95f0",
+  "maxParticipants": 4
 }
 
 ###
@@ -22,6 +23,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Impva
 
 ###
 
-GET http://localhost:3000/lobby/9f583c1c-8f1e-4025-88d8-4e2b21134f74
+GET http://localhost:3000/lobby/e7aa6b7e-8019-4fb9-8be6-022d90f0b339
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOiI1NzRkMzYwYS1mYzIxLTQ0YmYtOGQxMi1lZDY2YzY5OWFkZjQiLCJpYXQiOjE3Mjk1Mjc5ODcsImV4cCI6MTcyOTUzMTU4N30.HhadvtvVE9FzYAveiZVZmVStoORW_17jePYnXQmIpyM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOiJjNzEwM2JkYS1hZWZhLTQ1OTktODdhYi0wOTBjYzQyZjk1ZjAiLCJpYXQiOjE3Mjk1MzEwOTEsImV4cCI6MTcyOTUzNDY5MX0.hMV6I4xnBafouVqQV0uY6kVQwj7iQYmNPMJ6Ly9fcfo
