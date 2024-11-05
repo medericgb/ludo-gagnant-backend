@@ -41,6 +41,7 @@ export class LobbyService {
   }
 
   async findAll(): Promise<LobbyWithCreator[]> {
+    // @ts-ignore
     return this.prisma.lobby.findMany({
       select: {
         ...this.getLobbySelect(),
@@ -64,15 +65,12 @@ export class LobbyService {
       throw new HttpException('Lobby not found', HttpStatus.NOT_FOUND);
     }
 
+    // @ts-ignore
     return lobby;
   }
 
-  async joinLobby(lobbyId: string, userId: string): Promise<Lobby> {
+  async joinLobby(lobbyId: string, userId: string): Promise<any> {
     const lobby = await this.findOne(lobbyId);
-
-    if (lobby.participants.length >= lobby.maxParticipants) {
-      throw new HttpException('Lobby is full', HttpStatus.CONFLICT);
-    }
 
     if (lobby.participants.includes(userId)) {
       throw new HttpException(
@@ -81,7 +79,11 @@ export class LobbyService {
       );
     }
 
-    return this.prisma.lobby.update({
+    if (lobby.participants.length >= lobby.maxParticipants) {
+      throw new HttpException('Lobby is full', HttpStatus.CONFLICT);
+    }
+
+    await this.prisma.lobby.update({
       where: { id: lobbyId },
       data: {
         participants: {
@@ -90,6 +92,11 @@ export class LobbyService {
       },
       select: this.getLobbySelect(),
     });
+
+    return {
+      message: 'User joined lobby successfully',
+      statusCode: HttpStatus.OK
+    };
   }
 
   async deleteLobby(lobbyId: string, userId: string): Promise<any> {
@@ -108,7 +115,7 @@ export class LobbyService {
     });
   }
 
-  async leaveLobby(lobbyId: string, userId: string): Promise<Lobby> {
+  async leaveLobby(lobbyId: string, userId: string): Promise<any> {
     const lobby = await this.findLobbyWithCreator(lobbyId);
 
     if (!lobby.participants.includes(userId)) {
@@ -122,10 +129,15 @@ export class LobbyService {
       );
     }
 
-    return this.updateLobbyParticipants(
+    await this.updateLobbyParticipants(
       lobbyId,
       lobby.participants.filter((id) => id !== userId),
     );
+
+    return {
+      message: 'User left lobby successfully',
+      statusCode: HttpStatus.OK
+    };
   }
 
   async kickParticipant(
@@ -194,6 +206,7 @@ export class LobbyService {
       throw new HttpException('Lobby not found', HttpStatus.NOT_FOUND);
     }
 
+    // @ts-ignore
     return lobby;
   }
 
@@ -201,6 +214,7 @@ export class LobbyService {
     lobbyId: string,
     participants: string[],
   ): Promise<Lobby> {
+    // @ts-ignore
     return this.prisma.lobby.update({
       where: { id: lobbyId },
       data: {

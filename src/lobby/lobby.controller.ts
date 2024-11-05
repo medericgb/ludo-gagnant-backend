@@ -30,4 +30,16 @@ export class LobbyController {
   findOne(@Param('id') id: string) {
     return this.lobbyService.findOne(id);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/leave')
+  leaveLobby(@Param('id') id: string, @Req() req) {
+    return this.lobbyService.leaveLobby(id, req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/kick')
+  kickParticipant(@Param('id') id: string, @Req() req) {
+    return this.lobbyService.kickParticipant(id, req.user.userId);
+  }
 }
