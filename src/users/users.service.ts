@@ -62,8 +62,9 @@ export class UsersService {
     email: string,
     phoneNumber: string
   ): Promise<{ exists: boolean; field?: string }> {
-    const fields = ['username', 'email', 'phoneNumber'];
+    const fields = ['username', 'email', 'phoneNumber'] as const;
     for (const field of fields) {
+      // @ts-ignore
       const user = await this.prisma.user.findUnique({ where: { [field]: eval(field) } });
       if (user) return { exists: true, field };
     }

@@ -1,6 +1,7 @@
-import { Body, Param, Controller, Post, Get, Req, UseGuards } from '@nestjs/common';
+import { Body, Param, Controller, Post, Get, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { LobbyService } from './lobby.service';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { CreateLobbyDto } from './dto/create-lobby.dto';
 
 @Controller('lobby')
 export class LobbyController {
@@ -8,8 +9,8 @@ export class LobbyController {
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
-  createLobby(@Body() body, @Req() req) {
-    return this.lobbyService.createLobby(body.name, req.user.userId);
+  createLobby(@Body(ValidationPipe) createLobbyDto: CreateLobbyDto, @Req() req) {
+    return this.lobbyService.createLobby(createLobbyDto, req.user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -28,5 +29,17 @@ export class LobbyController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.lobbyService.findOne(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/leave')
+  leaveLobby(@Param('id') id: string, @Req() req) {
+    return this.lobbyService.leaveLobby(id, req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/kick')
+  kickParticipant(@Param('id') id: string, @Req() req) {
+    return this.lobbyService.kickParticipant(id, req.user.userId);
   }
 }

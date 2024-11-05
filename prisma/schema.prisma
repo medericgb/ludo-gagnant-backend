@@ -27,11 +27,12 @@ model User {
 }
 
 model Lobby {
-  id           String   @id @default(uuid())
-  name         String
-  creatorId    String
-  creator      User     @relation(fields: [creatorId], references: [id])
-  participants String[]
+  id              String   @id @default(uuid())
+  name            String
+  creatorId       String
+  creator         User     @relation(fields: [creatorId], references: [id])
+  participants    String[]
+  maxParticipants Int      @default(2)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
