@@ -9,33 +9,44 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Impva
 
 POST http://localhost:3000/lobby/create
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOiJjNzEwM2JkYS1hZWZhLTQ1OTktODdhYi0wOTBjYzQyZjk1ZjAiLCJpYXQiOjE3Mjk1MzEwOTEsImV4cCI6MTcyOTUzNDY5MX0.hMV6I4xnBafouVqQV0uY6kVQwj7iQYmNPMJ6Ly9fcfo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvaG4iLCJzdWIiOiJhZjc3ZWIzMC00MjRjLTRhYTMtODc0YS1kNDY4OGZkNWJhY2IiLCJpYXQiOjE3MzA5MDU0NzIsImV4cCI6MTczMDkwOTA3Mn0.WuFYrvqCuBLCWTIT3PiAA1JKPWWAeM2IKCLCdvp7ZZk
 
 {
   "name": "Warrior of the North",
   "userId": "c7103bda-aefa-4599-87ab-090cc42f95f0",
-  "maxParticipants": 4
+  "maxParticipants": 2
 }
 
 ### JOIN LOBBY
 
-POST http://localhost:3000/lobby/e7aa6b7e-8019-4fb9-8be6-022d90f0b339/join
+POST http://localhost:3000/lobby/8b287890-c768-42ae-810d-f311b786b8c0/join
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphY29iIiwic3ViIjoiZTYyMDE3YjktMDE1MC00YzdhLTgwZWItNjNlZjVjZjQ2MmUyIiwiaWF0IjoxNzMwMjE4NjE2LCJleHAiOjE3MzAyMjIyMTZ9.cj7uxCbAXhzsgMO2Pu-T2k8bnlKapJl0tNzqDGGHvQU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1pY2hlbCIsInN1YiI6ImZlYTNlYzk1LWI2ZTEtNDg4OS1iOTgyLWYwNTU1NmE2MDU3YiIsImlhdCI6MTczMDg5MzUwOSwiZXhwIjoxNzMwODk3MTA5fQ.MFooaQEKmiUNyE0fkCzSGvojgiU2eULtkzHoTlpO7k0
 
 ### LEAVE LOBBY
 
-POST http://localhost:3000/lobby/e7aa6b7e-8019-4fb9-8be6-022d90f0b339/leave
+POST http://localhost:3000/lobby/8b287890-c768-42ae-810d-f311b786b8c0/leave
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphY29iIiwic3ViIjoiZTYyMDE3YjktMDE1MC00YzdhLTgwZWItNjNlZjVjZjQ2MmUyIiwiaWF0IjoxNzMwMjE4NjE2LCJleHAiOjE3MzAyMjIyMTZ9.cj7uxCbAXhzsgMO2Pu-T2k8bnlKapJl0tNzqDGGHvQU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1pY2hlbCIsInN1YiI6ImZlYTNlYzk1LWI2ZTEtNDg4OS1iOTgyLWYwNTU1NmE2MDU3YiIsImlhdCI6MTczMDg5MzUwOSwiZXhwIjoxNzMwODk3MTA5fQ.MFooaQEKmiUNyE0fkCzSGvojgiU2eULtkzHoTlpO7k0
 
 ### KICK PLAYER FROM LOBBY
-POST http://localhost:3000/lobby/e7aa6b7e-8019-4fb9-8be6-022d90f0b339/kick
+
+POST http://localhost:3000/lobby/8b287890-c768-42ae-810d-f311b786b8c0/kick
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImphY29iIiwic3ViIjoiZTYyMDE3YjktMDE1MC00YzdhLTgwZWItNjNlZjVjZjQ2MmUyIiwiaWF0IjoxNzMwMjE4NjE2LCJleHAiOjE3MzAyMjIyMTZ9.cj7uxCbAXhzsgMO2Pu-T2k8bnlKapJl0tNzqDGGHvQU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvaG4iLCJzdWIiOiJhZjc3ZWIzMC00MjRjLTRhYTMtODc0YS1kNDY4OGZkNWJhY2IiLCJpYXQiOjE3MzA4OTMwMjIsImV4cCI6MTczMDg5NjYyMn0.bny2sT1KwSoAEFnMi75KYz_JfDhnL3xY1LKbTyNbuNE
+
+{
+  "participantId": "fea3ec95-b6e1-4889-b982-f05556a6057b"
+}
+
+### DELETE LOBBY
+
+DELETE http://localhost:3000/lobby/acc6d209-3177-41de-9956-24000612d778
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvaG4iLCJzdWIiOiJhZjc3ZWIzMC00MjRjLTRhYTMtODc0YS1kNDY4OGZkNWJhY2IiLCJpYXQiOjE3MzA5MDYxMDIsImV4cCI6MTczMDkwOTcwMn0.Q7QnultNmM79zEl-pG9TJS8sS5spwndvmiP3yG4TD70
 
 ### GET LOBBY
 
-GET http://localhost:3000/lobby/e7aa6b7e-8019-4fb9-8be6-022d90f0b339
+GET http://localhost:3000/lobby/8b287890-c768-42ae-810d-f311b786b8c0
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRqZW4iLCJzdWIiOiI4ZWFlMjNmMS00Y2NjLTRmZmItYWZjNS1jYWViZmU2Y2JjZGYiLCJpYXQiOjE3MzAyMTg1MzksImV4cCI6MTczMDIyMjEzOX0.apNU1Tpmhp91A3nkvLQ2Mpsz9cg5xLDhHJs-7oBMuPY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvaG4iLCJzdWIiOiJhZjc3ZWIzMC00MjRjLTRhYTMtODc0YS1kNDY4OGZkNWJhY2IiLCJpYXQiOjE3MzA5MDYxMDIsImV4cCI6MTczMDkwOTcwMn0.Q7QnultNmM79zEl-pG9TJS8sS5spwndvmiP3yG4TD70

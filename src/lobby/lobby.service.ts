@@ -95,11 +95,12 @@ export class LobbyService {
 
     return {
       message: 'User joined lobby successfully',
-      statusCode: HttpStatus.OK
+      statusCode: HttpStatus.OK,
     };
   }
 
   async deleteLobby(lobbyId: string, userId: string): Promise<any> {
+
     const lobby = await this.findLobbyWithCreator(lobbyId);
 
     if (lobby.creator.id !== userId) {
@@ -109,10 +110,14 @@ export class LobbyService {
       );
     }
 
-    return this.prisma.lobby.delete({
+    await this.prisma.lobby.delete({
       where: { id: lobbyId },
-      select: this.getLobbySelect(),
     });
+
+    return {
+      message: 'Lobby deleted successfully',
+      statusCode: HttpStatus.OK,
+    };
   }
 
   async leaveLobby(lobbyId: string, userId: string): Promise<any> {
@@ -136,18 +141,18 @@ export class LobbyService {
 
     return {
       message: 'User left lobby successfully',
-      statusCode: HttpStatus.OK
+      statusCode: HttpStatus.OK,
     };
   }
 
   async kickParticipant(
     lobbyId: string,
-    userId: string,
+    creatorId: string,
     participantId: string,
-  ): Promise<Lobby> {
+  ): Promise<{ success: boolean; message: string; statusCode: number }> {
     const lobby = await this.findLobbyWithCreator(lobbyId);
 
-    if (lobby.creator.id !== userId) {
+    if (lobby.creator.id !== creatorId) {
       throw new HttpException(
         'Only the creator can kick participants',
         HttpStatus.UNAUTHORIZED,
@@ -161,14 +166,22 @@ export class LobbyService {
       );
     }
 
-    if (participantId === userId) {
+    if (participantId === creatorId) {
       throw new HttpException('Cannot kick yourself', HttpStatus.CONFLICT);
     }
 
-    return this.updateLobbyParticipants(
+    await this.updateLobbyParticipants(
+      // Await the update
       lobbyId,
       lobby.participants.filter((id) => id !== participantId),
     );
+
+    return {
+      // Updated return statement
+      success: true,
+      message: 'Participant kicked successfully',
+      statusCode: HttpStatus.OK, // Added status code
+    };
   }
 
   private getLobbySelect() {
