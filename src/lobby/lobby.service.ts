@@ -100,7 +100,6 @@ export class LobbyService {
   }
 
   async deleteLobby(lobbyId: string, userId: string): Promise<any> {
-
     const lobby = await this.findLobbyWithCreator(lobbyId);
 
     if (lobby.creator.id !== userId) {
@@ -181,6 +180,70 @@ export class LobbyService {
       success: true,
       message: 'Participant kicked successfully',
       statusCode: HttpStatus.OK, // Added status code
+    };
+  }
+
+  async startGame(lobbyId: string, creatorId: string): Promise<any> {
+    const lobby = await this.findLobbyWithCreator(lobbyId);
+
+    // Check if the user is the creator
+    if (lobby.creator.id !== creatorId) {
+      throw new HttpException(
+        'Only the creator can start the game',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    // Check if there are at least 2 participants
+    if (lobby.participants.length < 2) {
+      throw new HttpException(
+        'At least 2 participants are required to start a game',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // Check if a game already exists for this lobby
+    const existingGame = await this.prisma.$queryRaw`
+      SELECT id FROM "Game" WHERE "lobbyId" = ${lobbyId}
+    `;
+
+    if (existingGame && existingGame.length > 0) {
+      return {
+        gameId: existingGame[0].id,
+        message: 'Game already exists for this lobby',
+        statusCode: HttpStatus.OK,
+      };
+    }
+
+    // Create a new game
+    const game = await this.prisma.game.create({
+      data: {
+        status: 'WAITING',
+        lobbyId,
+      },
+    });
+
+    return {
+      gameId: game.id,
+      message: 'Game created successfully',
+      statusCode: HttpStatus.CREATED,
+    };
+  }
+
+  async getLobbyWithGame(lobbyId: string): Promise<any> {
+    const lobby = await this.findLobbyWithCreator(lobbyId);
+
+    // Find associated game if any
+    const game = await this.prisma.game.findFirst({
+      where: { lobbyId },
+      include: {
+        players: true,
+      },
+    });
+
+    return {
+      ...lobby,
+      game,
     };
   }
 

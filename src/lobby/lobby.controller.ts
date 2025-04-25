@@ -8,13 +8,14 @@ import {
   UseGuards,
   ValidationPipe,
   Delete,
+  Request,
 } from '@nestjs/common';
 import { LobbyService } from './lobby.service';
-import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateLobbyDto } from './dto/create-lobby.dto';
 import { KickParticipantDto } from './dto/kick-participant.dto';
 
-@Controller('lobby')
+@Controller('lobbies')
 @UseGuards(JwtAuthGuard)
 export class LobbyController {
   constructor(private readonly lobbyService: LobbyService) {}
@@ -64,5 +65,15 @@ export class LobbyController {
   @Delete(':id')
   deleteLobby(@Param('id') id: string, @Req() req) {
     return this.lobbyService.deleteLobby(id, req.user.userId);
+  }
+
+  @Post(':id/start-game')
+  async startGame(@Param('id') id: string, @Request() req) {
+    return this.lobbyService.startGame(id, req.user.userId);
+  }
+
+  @Get(':id/with-game')
+  async getLobbyWithGame(@Param('id') id: string) {
+    return this.lobbyService.getLobbyWithGame(id);
   }
 }

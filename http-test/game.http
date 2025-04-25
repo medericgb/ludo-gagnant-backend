@@ -1,0 +1,60 @@
+### CREATE A NEW GAME FROM A LOBBY
+
+POST http://localhost:3000/lobbies/{{lobbyId}}/start-game
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### GET A LOBBY WITH GAME INFORMATION
+
+GET http://localhost:3000/lobbies/{{lobbyId}}/with-game
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### GET A SPECIFIC GAME BY ID
+
+GET http://localhost:3000/games/{{gameId}}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### GET A GAME BY LOBBY ID
+
+GET http://localhost:3000/games/lobby/{{lobbyId}}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### JOIN A GAME WITH A SPECIFIC COLOR
+
+POST http://localhost:3000/games/{{gameId}}/join
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "color": "RED"
+}
+
+### SET PLAYER READY STATUS
+
+POST http://localhost:3000/games/{{gameId}}/ready
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "isReady": true
+}
+
+### ROLL DICE
+
+POST http://localhost:3000/games/{{gameId}}/roll-dice
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### MOVE A PIECE
+
+POST http://localhost:3000/games/{{gameId}}/move-piece
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "pieceId": 0,
+  "diceValue": 6
+}

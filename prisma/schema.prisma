@@ -21,6 +21,7 @@ model User {
   password    String
 
   lobbies Lobby[]
+  games   GamePlayer[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -33,7 +34,73 @@ model Lobby {
   creator         User     @relation(fields: [creatorId], references: [id])
   participants    String[]
   maxParticipants Int      @default(2)
+  game            Game?    @relation("LobbyToGame")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Game {
+  id          String       @id @default(uuid())
+  status      GameStatus   @default(WAITING)
+  currentTurn String? // User ID of the current player
+  winner      String? // User ID of the winner, if any
+  lobbyId     String       @unique
+  lobby       Lobby        @relation("LobbyToGame", fields: [lobbyId], references: [id])
+  players     GamePlayer[]
+  moves       GameMove[]
+  diceRolls   DiceRoll[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GamePlayer {
+  id       String      @id @default(uuid())
+  gameId   String
+  game     Game        @relation(fields: [gameId], references: [id])
+  userId   String
+  user     User        @relation(fields: [userId], references: [id])
+  color    PlayerColor
+  position Json // Stores positions of all 4 pieces
+  isReady  Boolean     @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([gameId, userId])
+  @@unique([gameId, color])
+}
+
+model GameMove {
+  id        String   @id @default(uuid())
+  gameId    String
+  game      Game     @relation(fields: [gameId], references: [id])
+  playerId  String // User ID
+  pieceId   Int // 0-3 for the four pieces
+  fromPos   Int
+  toPos     Int
+  createdAt DateTime @default(now())
+}
+
+model DiceRoll {
+  id        String   @id @default(uuid())
+  gameId    String
+  game      Game     @relation(fields: [gameId], references: [id])
+  playerId  String // User ID
+  value     Int // 1-6
+  createdAt DateTime @default(now())
+}
+
+enum GameStatus {
+  WAITING
+  PLAYING
+  FINISHED
+}
+
+enum PlayerColor {
+  RED
+  GREEN
+  YELLOW
+  BLUE
 }
